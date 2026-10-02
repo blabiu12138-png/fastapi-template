@@ -1,0 +1,29 @@
+# 只部署应用。DATABASE_URL / REDIS_URL 可连接自行准备的外部服务。
+services:
+  app:
+    build:
+      context: .
+      args:
+        UV_EXTRAS: ${UV_EXTRAS:-}
+    environment:
+      APP_NAME: ${APP_NAME:-FastAPI Application}
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      DEBUG: ${DEBUG:-false}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      LOG_FORMAT: ${LOG_FORMAT:-console}
+      CORS_ORIGINS: ${CORS_ORIGINS:-[]}
+      DATABASE_URL: ${DATABASE_URL:-}
+      REDIS_URL: ${REDIS_URL:-}
+      DEPENDENCY_TIMEOUT_SECONDS: ${DEPENDENCY_TIMEOUT_SECONDS:-5}
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "from urllib.request import urlopen; urlopen('http://localhost:8000/health', timeout=3)"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+

@@ -1,0 +1,44 @@
+[project]
+name = "fastapi-template"
+version = "0.1.0"
+description = "Reusable FastAPI application infrastructure"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.34.0",
+    "pydantic>=2.10.0",
+    "pydantic-settings>=2.7.0",
+]
+
+[project.optional-dependencies]
+db = [
+    "sqlalchemy[asyncio]>=2.0.0",
+    "alembic>=1.14.0",
+]
+postgres = ["asyncpg>=0.30.0"]
+sqlite = ["aiosqlite>=0.20.0"]
+mysql = ["aiomysql>=0.2.0"]
+redis = ["redis>=5.2.0"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+    "httpx>=0.28.0",
+    "ruff>=0.8.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP"]
+
+[tool.ruff.lint.per-file-ignores]
+# 自动生成的空迁移可能保留 SQLAlchemy / op 导入。
+"alembic/versions/*.py" = ["E501", "F401"]
